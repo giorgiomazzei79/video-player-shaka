@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="./index.css" />
+    <title>Video Player</title>
+</head>
+<body>
+    <div class="video-container">
+        <video
+            id="video"
+            poster="https://shaka-player-demo.appspot.com/assets/poster.jpg"
+            controls
+            autoplay>
+        </video>
+    </div>
+    <div class="bottom-container">
+        <div style="display: flex; align-items: center;">
+            <img src="./play-pause.png" id="playPause-btn" />
+            <button id="load-btn">Load</button>
+            <button id="destroy-btn">Destroy</button>
+        </div>
+        <div style="margin: 0 20px 0 20px;">
+            <strong>Subtitle tracks</strong>
+            <div class="video-container__subtitle-tracks"></div>
+        </div>
+        <div>
+            <strong>Subtitles</strong>
+            <div class="video-container__subtitles"></div>
+        </div>
+    </div>
+    
+    <script type="text/javascript"src="./shaka.js"></script>
+    <script type="text/javascript"src="./index.js"></script>
+</body>
+</html>

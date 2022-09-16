@@ -12,23 +12,22 @@
         <video
             id="video"
             poster="https://shaka-player-demo.appspot.com/assets/poster.jpg"
-            controls
             autoplay>
         </video>
+        <div class="video-container__subtitles custom-subtitles"></div>
+        <div class="video-container__controls">
+            <img src="./play-pause.png" id="playPause-btn" />
+            <progress id="progress" value="0" min="0"></progress>
+        </div>
     </div>
     <div class="bottom-container">
         <div style="display: flex; align-items: center;">
-            <img src="./play-pause.png" id="playPause-btn" />
             <button id="load-btn">Load</button>
             <button id="destroy-btn">Destroy</button>
         </div>
         <div style="margin: 0 20px 0 20px;">
             <strong>Subtitle tracks</strong>
             <div class="video-container__subtitle-tracks"></div>
-        </div>
-        <div>
-            <strong>Subtitles</strong>
-            <div class="video-container__subtitles"></div>
         </div>
     </div>
     

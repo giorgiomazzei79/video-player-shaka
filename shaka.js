@@ -22,6 +22,27 @@ function loadShaka() {
     })
 }
 
+const shakaConfig = {
+    streaming: {
+        alwaysStreamText: true
+    }
+}
+
+function setProgressBar() {
+    const progress = document.getElementById("progress");
+    progress.setAttribute("max", video.duration);
+    
+    video.addEventListener('timeupdate', () => {
+        progress.value = video.currentTime;
+    });
+
+    progress.addEventListener('click', (e) => {
+        const rect = progress.getBoundingClientRect();
+        const pos = (e.pageX  - rect.left) / progress.offsetWidth;
+        video.currentTime = pos * video.duration;
+    });
+}
+
 async function shakaInitPlayer(manifestUri) {
     // Create a Player instance.
     video = document.querySelector('video');
@@ -32,6 +53,9 @@ async function shakaInitPlayer(manifestUri) {
 
     // Listen for error events.
     player.addEventListener('error', shakaOnErrorEvent);
+
+     // set config
+     player.configure(shakaConfig);
     
     // Try to load a manifest.
     // This is an asynchronous process.
@@ -39,6 +63,8 @@ async function shakaInitPlayer(manifestUri) {
         await player.load(manifestUri);
         // This runs if the asynchronous load is successful.
         player.setVideoContainer(video);
+        getSubtitleTracks();
+        setProgressBar();
     } catch (e) {
         alert(e);
     }
@@ -47,4 +73,45 @@ async function shakaInitPlayer(manifestUri) {
 function shakaOnErrorEvent(event) {
     // Extract the shaka.util.Error object from the event.
     alert(event.detail);
+}
+
+function getSubtitleTracks() {
+    // get subtitle tracks available
+    const textTracks = player.getTextTracks();
+    console.log(textTracks);
+
+    // set default, otherwise the first option will be set ("el")
+    const englishSubtitles = textTracks.find(el => el.language == "en");
+
+    player.setTextTrackVisibility(false);
+
+    if (englishSubtitles) {
+        const { id } = englishSubtitles;
+        player.selectTextTrack(textTracks[id - 1]);     
+    }
+
+    // add subtitle options to UI
+    const subtitlesWrapper = document.querySelector(".video-container__subtitle-tracks");
+    textTracks.forEach(({language}) => {
+        let item = document.createElement("div");
+        item.className = "subtitle-item";
+        item.innerText = language;
+        subtitlesWrapper.appendChild(item);
+        item.addEventListener("click", ({ target }) => {
+            player.selectTextLanguage(target.innerText);
+        })
+    });
+
+    video.textTracks[0].addEventListener('cuechange', ({target: {activeCues} = {}}) => {
+        console.log("activeCues: ", activeCues)
+        if (activeCues) renderSubtitle(activeCues);
+    })
+
+    function renderSubtitle(activeCues){
+        if (activeCues[0]?.text) {
+            document.querySelector(".video-container__subtitles").innerText = activeCues[0].text;
+        } else {
+            document.querySelector(".video-container__subtitles").innerText = "";
+        }
+    }
 }

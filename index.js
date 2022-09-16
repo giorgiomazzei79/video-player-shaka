@@ -18,12 +18,34 @@ async function initPlayer() {
 
 // set up basic functionality
 function loadPlayer() {
+    if (!player) {
+        initPlayer();
+    } else {
+        alert("Player already loaded");
+    }
 }
 
 function pausePlay() {
+    if (video.paused) {
+        video.play();
+    } else {
+        video.pause();
+    }
 }
 
 function destroyPlayer() {
+    player.destroy();
+    player = null;
+
+    // reset subtitles
+    document
+        .querySelector(".video-container__subtitles").innerText = "";
+    document
+        .querySelector(".video-container__subtitle-tracks")
+        .classList.add("hide");
+    document
+        .querySelector(".video-container__subtitle-tracks")
+        .innerHTML = "";
 }
 
 // set up handlers
